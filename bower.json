@@ -1,0 +1,27 @@
+{
+  "name": "labhr-js",
+  "description": "A NodeJS/Browser implementation of Let's All Build a Hat Rack.",
+  "main": "index.js",
+  "authors": [
+    "Lee Symes"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "labhr"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.0"
+  }
+}

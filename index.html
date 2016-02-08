@@ -1,0 +1,82 @@
+<html>
+<head>
+  <meta charset='UTF-8' />
+  <title>Let's All Build a Hat Rack</title>
+  <!-- <script src="bower_components/jquery/dist/jquery.min.js"></script> -->
+  <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="index.js"></script>
+  <style>
+    div.contributors > div {
+      display:inline-block;
+      padding: 10px;
+    }
+    div.contributors > div > div {
+      text-align: center;
+      padding: 5px;
+    }
+    footer {
+      padding-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Non-code contributions for <span class='repo-name'></span></h1>
+  <div id='non-code-contributors' class='contributors'>
+    <div class='progress'></div>
+  </div>
+  <h1>Code contributions for <span class='repo-name'></span></h1>
+  <div id='code-contributors' class='contributors'>
+    <div class='progress'></div>
+  </div>
+  <footer>
+    Generated a JavaScript port of <a href='https://github.com/LABHR/octohatrack'>octohatrack</a>.
+  </footer>
+
+  <script>
+    function contributorToHtml (project, contributor) {
+      var username = contributor['login']
+      var userDisplayName = contributor['name'] || username
+      var url = 'https://github.com/' + project + '/issues?q=involves:' + username
+      var avatar = contributor['avatar_url'] + '&s=128'
+      // Woo, let's construct HTML using string concatination because it's safer(TM) :P
+      // Also this makes me wish for decent string formatting or some library that allows
+      //  the programatic construction of HTML and then allows it to be easily inserted into the DOM.
+      // I wonder if I have one of those on the page already.
+      return ('<div><a href="' + url + '"><img src="' + avatar + '" width="128" alt="' +
+              username + '"></a><div>' + userDisplayName + '</div></div>')
+    }
+    var project = 'LABHR/octohatrack'
+    var timeout = 0
+    $('.repo-name').text(project)
+    labhr(project).then(function (contributors) {
+      var codeHtml = ""
+      contributors['codeContributors'].forEach(function (contributor) {
+        codeHtml += contributorToHtml(project, contributor)
+      })
+      $('#code-contributors').html(codeHtml)
+
+      var codeHtml = ""
+      contributors['issuesOnlyContributors'].forEach(function (contributor) {
+        codeHtml += contributorToHtml(project, contributor)
+      })
+      $('#non-code-contributors').html(codeHtml)
+      clearTimeout(timeout)
+    })
+
+    // I needed a progress spinner thing, and this was quick and hacky
+    $('.progress').html("<span>&#8226;</span><span>&#8226;</span><span>&#8226;</span>")
+    ;(function() {
+      function timer(currIdx) {
+        var progress = $('.progress')
+        if (progress) {
+          timeout = setTimeout(timer, 300, (currIdx % 3) + 1)
+          $('.progress span').css('font-size', '16px')
+          // nth-child is 1 indexed so we use currIdx from 1-3(inclusive.)
+          $('.progress span:nth-child(' + currIdx + ')').css('font-size', '20px')
+        }
+      }
+      timer(1)
+    })()
+  </script>
+</body>
+</html>
