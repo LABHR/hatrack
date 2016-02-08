@@ -1,5 +1,5 @@
 ;(function ($) {
-  var cache = {}
+  // var cache = {}
   var linkRe = /<([^>]+)>; rel="(\w+)"/
 
   function combine () {
@@ -25,28 +25,7 @@
     })
   }
 
-  function credentialSetup (xhr, settings) {
-    xhr.withCredentials = true
-    xhr.setRequestHeader('Authorization', 'Basic <<Your Auth Here!>>')
-  }
-
-  function cachedRequest (url) {
-    if (cache[url]) {
-      return cache[url]
-    } else {
-      var response = cache[url] = $.ajax(url, {
-        method: 'GET',
-        beforeSend: credentialSetup
-      })
-      response.then(function (json, status, response) {
-        //
-      })
-      return response
-    }
-  }
-
   function parseLinks (linkHeader) {
-    // <https://api.github.com/repositories/11407242/contributors?pageSize=10&page=2>; rel="next", <https://api.github.com/repositories/11407242/contributors?pageSize=10&page=3>; rel="last"
     var links = {}
     linkHeader.split(', ').forEach(function (linkPart) {
       var re = linkPart.match(linkRe)
@@ -58,35 +37,57 @@
     })
     return links
   }
+  // Labhr.prototype.credentialSetup = function (xhr, settings) {
+  //   xhr.withCredentials = true
+  //   xhr.setRequestHeader('Authorization', 'Basic <<Your Auth Here!>>')
+  // }
+  //
+  // Labhr.prototype.cachedRequest = function (url) {
+  //   if (cache[url]) {
+  //     return cache[url]
+  //   } else {
+  //     var response = cache[url] = $.ajax(url, {
+  //       method: 'GET',
+  //       beforeSend: this.credentialSetup
+  //     })
+  //     response.then(function (json, status, response) {
+  //       //
+  //     })
+  //     return response
+  //   }
+  // }
 
-  function doPagination (sharedCache, url, direction) {
+  Labhr.prototype.doPagination = function (sharedCache, url, direction) {
+    var that = this
     if (!url || sharedCache[url]) {
       return $.Deferred().resolve([]).promise()
     } else {
       sharedCache[url] = true
-      return cachedRequest(url).then(function (json, status, response) {
+      return this.cachedRequest(url).then(function (json, status, response) {
         var links = parseLinks(response.getResponseHeader('Link'))
         var next_url = links[direction]
-        return doPagination(sharedCache, next_url, direction).then(function (runningPagination) {
-          if (direction === 'next') {
-            return combine(json, runningPagination)
-          } else {
-            return combine(runningPagination, json)
-          }
-        })
+        return that.doPagination(sharedCache, next_url, direction).then(
+          function (runningPagination) {
+            if (direction === 'next') {
+              return combine(json, runningPagination)
+            } else {
+              return combine(runningPagination, json)
+            }
+          })
       })
     }
   }
 
-  function autoPaginate (baseUrl) {
-    return cachedRequest(baseUrl).then(function (json, status, response) {
+  Labhr.prototype.autoPaginate = function (baseUrl) {
+    var that = this
+    return that.cachedRequest(baseUrl).then(function (json, status, response) {
       var linkHeader = response.getResponseHeader('Link')
       if (linkHeader) {
         var links = parseLinks(linkHeader)
         var paginationCache = {}
         return $.when(
-          doPagination(paginationCache, links['next'], 'next'),
-          doPagination(paginationCache, links['last'], 'prev')
+          that.doPagination(paginationCache, links['next'], 'next'),
+          that.doPagination(paginationCache, links['last'], 'prev')
         ).then(function (list1, list2) {
           return combine(json, list1, list2)
         })
@@ -96,40 +97,45 @@
     })
   }
 
-  function getUserFullInfo (userInfo) {
-    return cachedRequest(userInfo.url).then(function (json, status, xhr) {
+  Labhr.prototype.getUserFullInfo = function (userInfo) {
+    return this.cachedRequest(userInfo.url).then(function (json, status, xhr) {
       return json
     })
   }
 
-  function getAllUserFullInfo (listOfUsers) {
+  Labhr.prototype.getAllUserFullInfo = function (listOfUsers) {
+    var that = this
     var allPromises = []
     listOfUsers.forEach(function (user) {
-      allPromises.push(getUserFullInfo(user))
+      allPromises.push(that.getUserFullInfo(user))
     })
     return whenAll(allPromises).then(function (allUsers) {
       return allUsers
     })
   }
 
-  function codeContributors (repo) {
-    var baseUrl = 'https://api.github.com/repos/' + repo + '/contributors?pageSize=30'
-    return autoPaginate(baseUrl).then(getAllUserFullInfo)
+  Labhr.prototype.codeContributors = function (host, repo) {
+    var that = this
+    var baseUrl = host + '/repos/' + repo + '/contributors?pageSize=30'
+    return this.autoPaginate(baseUrl).then(function (users) {
+      return that.getAllUserFullInfo(users)
+    })
   }
 
-  function issueContributors (repo) {
-    // This API call also includes Pull requests ... sweet.
-    var baseUrl = 'https://api.github.com/repos/' + repo + '/issues?pageSize=30&state=all'
-    return autoPaginate(baseUrl).then(function (issues) {
+  Labhr.prototype.issueContributors = function (host, repo) {
+    var that = this
+    // This API call also includes Pull requests(I think) ... sweet.
+    var baseUrl = host + '/repos/' + repo + '/issues?pageSize=30&state=all'
+    return this.autoPaginate(baseUrl).then(function (issues) {
       var perIssuePromises = []
       issues.forEach(function (issue) {
         perIssuePromises.push(
-          autoPaginate(issue.comments_url).then(function (allComments) {
+          that.autoPaginate(issue.comments_url).then(function (allComments) {
             var issueUsers = [issue.user]
             allComments.forEach(function (comment) {
               issueUsers.push(comment.user)
             })
-            return getAllUserFullInfo(issueUsers)
+            return that.getAllUserFullInfo(issueUsers)
           })
         )
       })
@@ -149,10 +155,19 @@
     })
   }
 
-  function labhr (repo) {
+  function Labhr (host, repo, cachedRequest) {
+    if (this.constructor != Labhr) {
+      return new Labhr(host, repo, cachedRequest)
+    }
+    this.host = host
+    this.repo = repo
+    this.cachedRequest = cachedRequest
+  }
+
+  Labhr.prototype.load = function () {
     return $.when(
-      codeContributors(repo),
-      issueContributors(repo)
+      this.codeContributors(this.host, this.repo),
+      this.issueContributors(this.host, this.repo)
     ).then(function (codeContrib, issueContrib) {
       var codeContribUsernames = {}
       codeContrib.forEach(function (user) {
@@ -172,5 +187,5 @@
     })
   }
 
-  window.labhr = labhr
+  window.Labhr = Labhr
 })(jQuery)
