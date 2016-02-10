@@ -1,7 +1,7 @@
 {
   "name": "labhr-js",
   "description": "A NodeJS/Browser implementation of Let's All Build a Hat Rack.",
-  "main": "index.js",
+  "main": "index.html",
   "authors": [
     "Lee Symes"
   ],
@@ -12,7 +12,7 @@
   "moduleType": [
     "globals"
   ],
-  "homepage": "",
+  "homepage": "https://github.com/leesdolphin/js-hatrack",
   "private": true,
   "ignore": [
     "**/.*",

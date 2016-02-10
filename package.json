@@ -1,0 +1,29 @@
+{
+  "name": "labhr-js",
+  "version": "0.0.1",
+  "description": "A Browser implementation of Let's All Build a Hat Rack.",
+  "repository": "https://github.com/leesdolphin/js-hatrack",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint *.js *.html"
+  },
+  "keywords": [
+    "labhr"
+  ],
+  "author": "Lee Symes",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint-plugin-html": "^1.3.0",
+    "standard": "^5.4.1"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "plugins": [
+      "html"
+    ],
+    "settings": {
+      "html/indent": "+2"
+    }
+  }
+}
