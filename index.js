@@ -209,7 +209,7 @@
         var next_url = links[direction]
         return when(
           requestParser(json),
-          that.doPagination(sharedCache, next_url, direction)
+          that.doPagination(sharedCache, next_url, direction, requestParser)
         )
       })
     }
