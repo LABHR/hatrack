@@ -87,20 +87,30 @@
           contributors['codeContributors'].forEach(function (contributor) {
             codeHtml += contributorToHtml(project, contributor, "code")
           })
-          $('#contributors').append(codeHtml)
+          addContributor(codeHtml)
         }
         if (contributors['nonCodeOnlyContributors']) {
           codeHtml = ''
           contributors['nonCodeOnlyContributors'].forEach(function (contributor) {
             codeHtml += contributorToHtml(project, contributor, "non-code")
           })
-          $('#contributors').append(codeHtml)
+          addContributor(codeHtml)
         }
       }).then(function () {
         // All loading is complete
         removeProgressSpinners()
       })
     }
+
+	
+    // Hacky version of a random shuffle
+    function addContributor(codeHtml) { 
+	if (Math.random() > 0.5) { 
+	  $("#contributors").append(codeHtml);
+        } else { 
+	  $("#contributors").prepend(codeHtml);
+        } 
+    } 
 
     function bootstrapRun () {
       var authType = $('input:radio[name=auth]:checked').val()
