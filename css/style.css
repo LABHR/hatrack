@@ -1,0 +1,37 @@
+div.contributors > div {
+  display:inline-block;
+  padding: 13px;
+  vertical-align: top;
+
+}
+
+div.non-code { 
+  color: green;
+} 
+
+div.contributors > div > div { 
+  text-align: center; 
+  width: 120px;
+   padding: 5px
+}
+
+footer {
+  padding-top: 40px
+}
+.intro-header { 
+  background: no-repeat center center; 
+  background-size: cover; 
+  height: 300px;
+  margin-bottom: 50px;
+}
+
+.row { 
+  padding-top: 10px
+} 
+
+.section-heading {
+  color:white;
+  padding-top: 100px;
+  text-align: center;
+  font-weight: bold;
+} 

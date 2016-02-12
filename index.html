@@ -1,31 +1,30 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<meta charset='UTF-8'>
 <head>
-  <meta charset='UTF-8' />
-  <title>Let's All Build a Hat Rack</title>
-  <!-- <script src='bower_components/jquery/dist/jquery.min.js'></script> -->
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/skeleton.css" />
+  <link rel="stylesheet" href="css/digital_style.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" />
   <script src='http://code.jquery.com/jquery-1.12.0.min.js'></script>
   <script src='index.js'></script>
-  <style>
-    div.contributors > div {
-      display:inline-block;
-      padding: 10px;
-    }
-    div.contributors > div > div {
-      text-align: center;
-      padding: 5px;
-    }
-    footer {
-      padding-top: 40px;
-    }
-    .auth-subform {
-      margin-left: 25px;
-      padding-left: 3px;
-    }
-    .auth-subform label {
-      display: block;
-    }
-  </style>
 </head>
+
+<body>
+  <div class="section intro-header" style="background-image: url('img/header.png')">
+    <div class="container">
+      <h1 class="section-heading">Let's build a hat rack <span class="repo-name"></span>
+</h1>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="container">
+        <div class="row">
+        <div class="twelve columns">
+
 <body onload='loadState($("form"))'>
   <div id='initial-form'>
     <form name='auth-and-repo' onsubmit='bootstrapRun();return false;'>
@@ -52,15 +51,9 @@
     </form>
   </div>
   <div id='all-contributors' style='display:none'>
-    <h1>Non-code contributions for <span class='repo-name'></span>
+    <h1>Contributors</h1>
       <span class='progress'></span>
-    </h1>
-    <div id='non-code-contributors' class='contributors'>
-    </div>
-    <h1>Code contributions for <span class='repo-name'></span>
-      <span class='progress'></span>
-    </h1>
-    <div id='code-contributors' class='contributors'>
+    <div id='contributors' class='contributors'>
     </div>
   </div>
   <footer>
@@ -71,7 +64,7 @@
   <script>
     /* eslint-env jquery */
     function runForProject (project, cachedRequest) {
-      function contributorToHtml (project, contributor) {
+      function contributorToHtml (project, contributor, type) {
         var username = contributor['login']
         var userDisplayName = contributor['name'] || username
         var url = 'https://github.com/' + project + '/issues?q=involves:' + username
@@ -80,7 +73,7 @@
         // Also this makes me wish for decent string formatting or some library that allows
         //  the programatic construction of HTML and then allows it to be easily inserted into the DOM.
         // I wonder if I have one of those on the page already.
-        return ('<div><a href="' + url + '"><img src="' + avatar + '" width="128" alt="' +
+        return ('<div class="'+type+'"><a href="' + url + '"><img src="' + avatar + '" width="128" alt="' +
                 username + '"></a><div>' + userDisplayName + '</div></div>')
       }
 
@@ -92,16 +85,16 @@
         if (contributors['codeContributors']) {
           codeHtml = ''
           contributors['codeContributors'].forEach(function (contributor) {
-            codeHtml += contributorToHtml(project, contributor)
+            codeHtml += contributorToHtml(project, contributor, "code")
           })
-          $('#code-contributors').append(codeHtml)
+          $('#contributors').append(codeHtml)
         }
         if (contributors['nonCodeOnlyContributors']) {
           codeHtml = ''
           contributors['nonCodeOnlyContributors'].forEach(function (contributor) {
-            codeHtml += contributorToHtml(project, contributor)
+            codeHtml += contributorToHtml(project, contributor, "non-code")
           })
-          $('#non-code-contributors').append(codeHtml)
+          $('#contributors').append(codeHtml)
         }
       }).then(function () {
         // All loading is complete
@@ -142,7 +135,7 @@
         }
       }
       var repo = $('input[name=repo]').val()
-      $('.repo-name').text(repo)
+      $('.repo-name').text("for "+repo)
       $('#initial-form').hide()
       $('#all-contributors').show()
       runForProject(repo, cachedRequest)
