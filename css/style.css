@@ -2,36 +2,60 @@ div.contributors > div {
   display:inline-block;
   padding: 13px;
   vertical-align: top;
-
+}
+div.contributors > div > a {
+  /* Make the overlays work. */
+  position: relative;
+  display:inline-block;
+  /* Make them look nice. */
+  line-height: 0;
 }
 
-div.non-code { 
+div.non-code {
   color: green;
-} 
+}
+div.non-code div.overlay {
+  background-image: url(../img/Clapping.png);
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  background-size: 36px auto;
+  width: 100%;
+  height: 100%;
+  /* Make it overlay the image. */
+  position: absolute;
+  top: 0;
+}
 
-div.contributors > div > div { 
-  text-align: center; 
+div.contributors > div > div {
+  text-align: center;
   width: 120px;
-   padding: 5px
+  padding: 5px
 }
 
 footer {
   padding-top: 40px
 }
-.intro-header { 
-  background: no-repeat center center; 
-  background-size: cover; 
+.intro-header {
+  background: no-repeat center center;
+  background-size: cover;
   height: 300px;
   margin-bottom: 50px;
 }
 
-.row { 
+.row {
   padding-top: 10px
-} 
+}
 
 .section-heading {
   color:white;
   padding-top: 100px;
   text-align: center;
   font-weight: bold;
-} 
+}
+.section-heading .repo-name a {
+  color: white;
+  text-decoration: none;
+}
+.section-heading .repo-name a:hover {
+  text-decoration: underline;
+}
