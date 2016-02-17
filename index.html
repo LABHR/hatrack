@@ -264,8 +264,8 @@
         attemptHashLoad()
       }
       $(window).on('hashchange', function(event) {
-        if (event.originalEvent.newURL.endsWith('#')) {
-          // We're trying to get back to the login page.
+        if (!window.location.hash) {
+          // We're trying to get back to the login page(empty hash).
           if ($('#initial-form').is(':visible')) {
             // Already on the form page.
             // Don't need to do anything fancy
