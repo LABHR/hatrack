@@ -11,9 +11,6 @@ div.contributors > div > a {
   line-height: 0;
 }
 
-div.non-code {
-  color: green;
-}
 div.non-code div.overlay {
   background-image: url(../img/Clapping.png);
   background-position: bottom right;
@@ -52,10 +49,61 @@ footer {
   text-align: center;
   font-weight: bold;
 }
-.section-heading .repo-name a {
+.section-heading .repo-name a, .header-link a {
   color: white;
   text-decoration: none;
 }
-.section-heading .repo-name a:hover {
+.section-heading .repo-name a:hover, .header-link a:hover {
   text-decoration: underline;
+}
+
+.center-row {
+  text-align: center;
+}
+
+.or-box {
+  /* Based off http://stackoverflow.com/a/5214204/369021 */
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #000;
+  line-height: 0em;
+  margin: 10px 0 20px;
+  display: block;
+}
+.or-box * {
+  background:#fff;
+  padding:0 10px;
+  display: inline;
+}
+
+.buttom-img {
+  max-height: 36px;
+  box-sizing: border-box;
+  padding: 5px 0;
+  padding-right: 8px;
+  float: left;
+}
+
+footer {
+  padding-top: 2rem;
+  margin-top: 2rem;
+  border-top: solid 1px #eff0f1;
+  color: #819198;}
+
+@media screen and (min-width: 64em) {
+  .site-footer {
+    font-size: 1rem; } }
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+  .site-footer {
+    font-size: 1rem; } }
+
+@media screen and (max-width: 42em) {
+  .site-footer {
+    font-size: 0.9rem; } }
+
+.header-link {
+  color: white;
+  padding: 0 5px;
+  font-size: 90%;
 }
