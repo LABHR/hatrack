@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint *.js *.html",
-    "serve": "./node_modules/.bin/http-server ./ -o'index.html'"
+    "serve": "./node_modules/.bin/http-server ./ -c-1 -o'index.html'"
   },
   "keywords": [
     "labhr"
@@ -16,6 +16,7 @@
   "license": "ISC",
   "devDependencies": {
     "eslint-plugin-html": "^1.3.0",
+    "http-server": "^0.8.5",
     "standard": "^5.4.1"
   },
   "eslintConfig": {
