@@ -287,6 +287,7 @@
       } else {
         var repo = window.history.state['repo']
       }
+
       var oauth_credentials = requestOauth(true)
       console.log("Setting the repo? -", repo, "Got creds?", oauth_credentials, !!oauth_credentials)
       if (!repo) {
@@ -294,13 +295,15 @@
           window.cancelExec()
           window.cancelExec = null
         }
-        $("#contributors").empty()
+        $('#contributors').empty()
         $('#contributor-count').empty()
+        $('#request-information').empty()
         $('#repo-name').empty()
       } else {
         $('input[name="repo"]').val(repo)
       }
-      var showContrib = repo && oauth_credentials
+      // Use '!!' to coerce to a boolean
+      var showContrib = !!(repo && oauth_credentials)
       if (showContrib) {
         // Have a repo and credentials
         if (window.cancelExec && window.cancelExec.repo !== repo) {
@@ -313,8 +316,11 @@
           bootstrapHatRack()
         }
       }
+      $('.invalid').removeClass('invalid')
       $('#initial-form').toggle(!showContrib)
-      $('#all-contributors').toggle(!!showContrib)
+      $('#all-contributors').toggle(showContrib)
+      $('input[name="repo"]').prop('disabled', showContrib)
+      $('#github-oauth').prop('disabled', showContrib)
       $('#search-again button').prop('disabled', !showContrib)
       $('#permalink a').prop('href', window.location.href)
     }
@@ -374,7 +380,7 @@
         var cancelSpinners = createSpinners(this)
         requestOauth().then(function() {
           setLocation(repo)
-        })
+        }).always(cancelSpinners)
       })
     })
   </script>
