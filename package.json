@@ -2,7 +2,7 @@
   "name": "labhr-js",
   "version": "0.0.1",
   "description": "A Browser implementation of Let's All Build a Hat Rack.",
-  "repository": "https://github.com/leesdolphin/js-hatrack",
+  "repository": "https://github.com/LABHR/hatrack",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

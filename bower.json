@@ -12,7 +12,7 @@
   "moduleType": [
     "globals"
   ],
-  "homepage": "https://github.com/leesdolphin/js-hatrack",
+  "homepage": "https://github.com/labhr/hatrack",
   "private": true,
   "ignore": [
     "**/.*",
