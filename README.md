@@ -7,6 +7,9 @@ To run, simply open `index.html`.
 
 To run the linter install the dependancies using `npm install` and then run the linter `npm run lint`
 
+## Feature Parity with `octohatrack`
+
+This implementation is not feature complete with respect to the [octohatrack](https://github.com/LABHR/octohatrack) command-line tool. Check the [currently open 'enhancement' issues](https://github.com/LABHR/hatrack/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for more detail about what's missing. 
 
 ## How to save a static version of the hatrack page
 
